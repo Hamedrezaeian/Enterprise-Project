@@ -1,0 +1,22 @@
+import telnetlib
+import getpass
+user = input("Enter Your Username: ")
+password = getpass.getpass()
+IP = open("SwitchIP")
+
+for IP in IP:
+    IP = IP.strip()
+    print("Configuration Switch" + IP)
+    tn = telnetlib.Telnet(IP)
+    tn.read_until(b"Username:")
+    tn.write(user.encode("ascii") + b"\n")
+    tn.read_until(b"Password:")
+    tn.write(password.encode("ascii") + b"\n")
+    tn.write(b"enable\n")
+    tn.write(b"123\n")
+    tn.write(b"conf t\n")
+    for n in range(2, 21) :
+        tn.write(b"vlan " + str(n).encode("ascii") + b"\n")
+        tn.write(b"name Vlan_" + str(n).encode("ascii") + b"\n")
+   tn.write(b"end\n" + b"wr\n" + b"exit\n")
+   print(tn.read_all().decode("ascii"))
